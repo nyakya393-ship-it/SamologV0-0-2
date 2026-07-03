@@ -1,184 +1,121 @@
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #0f1115;
+  color: #fff;
 }
 
-body{
-  font-family:"Hiragino Sans","Yu Gothic",sans-serif;
-  color:#fff;
-
-  background:linear-gradient(
-    to top,
-    #2a1206,
-    #7a2f00,
-    #ff8a1f
-  );
-
-  min-height:100vh;
+/* 全体 */
+.app {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 12px;
 }
 
-/* 背景 */
-#bgInk{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:-1;
+/* ヘッダー */
+header {
+  text-align: center;
+  padding: 10px 0;
 }
 
-/* =========================
-   HEADER（InkLog基準）
-========================= */
-
-header{
-  padding:35px 22px 10px;
+/* タブ */
+.tabs {
+  display: flex;
+  gap: 6px;
+  margin: 10px 0;
 }
 
-.logoMain{
-  font-size:56px;   /* ←重要：戻す */
-  font-weight:900;
-  text-shadow:0 0 18px rgba(255,140,0,.5);
+.tab {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #2a2f3a;
+  color: #fff;
+  font-weight: bold;
 }
 
-.logoSub{
-  font-size:14px;
-  opacity:.7;
+.tab.active {
+  background: #00c2ff;
+  color: #000;
 }
 
-/* =========================
-   TAB（ここが修正ポイント）
-========================= */
-
-.tabs{
-  display:flex;
-  gap:10px;
-  margin:18px;
-  padding:10px;
-  background:#141414;
-  border-radius:24px;
+/* パネル */
+.panel {
+  display: none;
 }
 
-.tab{
-  flex:1;
-  padding:18px;          /* ←でかく戻す */
-  font-size:20px;        /* ←でかく戻す */
-  font-weight:900;
-  border:none;
-  border-radius:18px;
-  background:transparent;
-  color:#fff;
+.panel.active {
+  display: block;
 }
 
-.tab.active{
-  background:linear-gradient(135deg,#ffb347,#ff7a18);
-  color:#111;
-  transform:scale(1.03);
+/* 入力カード */
+#input {
+  background: #1a1f2a;
+  padding: 12px;
+  border-radius: 12px;
 }
 
-/* =========================
-   PAGE
-========================= */
-
-.page{
-  display:none;
-  padding:18px;
-}
-
-.page.active{
-  display:block;
-}
-
-/* =========================
-   CARD
-========================= */
-
-.card{
-  background:#0b0b0b;
-  border-radius:26px;
-  padding:20px;
-  margin-bottom:16px;
-  border:1px solid rgba(255,140,0,.25);
-}
-
-/* =========================
-   INPUT（ここ重要）
-========================= */
-
-input,select{
-  width:100%;
-  padding:20px;        /* ←大きく */
-  margin:10px 0;
-
-  border-radius:22px;
-  border:none;
-
-  background:#000;     /* ←黒強制 */
-  color:#fff;
-
-  font-size:16px;
-  font-weight:800;
-}
-
-input:focus,select:focus{
-  outline:2px solid #ffb347;
+/* 入力 */
+input {
+  width: 100%;
+  padding: 14px;
+  margin: 6px 0;
+  border-radius: 8px;
+  border: none;
+  background: #2a2f3a;
+  color: #fff;
+  font-size: 16px;
 }
 
 /* ボタン */
-button{
-  width:100%;
-  padding:18px;
-  border:none;
-  border-radius:22px;
-  font-weight:900;
-  background:#ffb347;
-  color:#111;
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  border: none;
+  border-radius: 8px;
+  background: #00c2ff;
+  color: #000;
+  font-weight: bold;
 }
 
-/* =========================
-   戦績カード
-========================= */
-
-.battleCard{
-  background:#0b0b0b;
-  padding:16px;
-  border-radius:20px;
-  margin:10px 0;
-  border-left:4px solid #ff8a1f;
+/* リスト */
+#battleList {
+  padding: 0;
 }
 
-/* =========================
-   KPI（ここが一番重要）
-========================= */
-
-.statGrid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:14px;
+li {
+  list-style: none;
+  background: #1a1f2a;
+  margin: 8px 0;
+  padding: 10px;
+  border-radius: 10px;
 }
 
-.statBox{
-  background:#0b0b0b;
-  border-radius:22px;
-  padding:18px;        /* ←増量 */
-  text-align:center;
+/* バッジ */
+.badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  margin-left: 6px;
 }
 
-.statValue{
-  font-size:38px;      /* ←かなり大きく */
-  font-weight:900;
-  color:#ffb347;
+.success {
+  background: #00ff9d;
+  color: #000;
 }
 
-.statLabel{
-  font-size:13px;
-  opacity:.7;
-  margin-top:6px;
+.fail {
+  background: #ff4d4d;
 }
 
-/* =========================
-   タッチ最適化
-========================= */
-
-button, input, select{
-  touch-action:manipulation;
+/* 削除ボタンだけ小さく */
+li button {
+  margin-top: 6px;
+  background: #444;
+  color: #fff;
+  font-size: 12px;
+  padding: 6px;
 }

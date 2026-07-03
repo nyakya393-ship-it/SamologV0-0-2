@@ -1,63 +1,93 @@
-let data = JSON.parse(localStorage.getItem("samolog") || "[]");
+let battles = JSON.parse(localStorage.getItem("battles")) || [];
 
-function go(i){
-  document.querySelectorAll(".page").forEach((p,idx)=>{
-    p.classList.toggle("active",idx===i);
-  });
-
-  document.querySelectorAll(".tab").forEach((t,idx)=>{
-    t.classList.toggle("active",idx===i);
-  });
-
-  render();
+function save() {
+  localStorage.setItem("battles", JSON.stringify(battles));
 }
 
-function add(){
+/* タブ（バグ防止版） */
+function switchTab(tab, el) {
+  document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
 
-  data.push({
-    id:Date.now(),
-    stage:stage.value,
-    result:result.value,
-    special:special.value,
-    gold:+gold.value||0,
-    goldA:+goldA.value||0,
-    red:+red.value||0
-  });
-
-  localStorage.setItem("samolog",JSON.stringify(data));
-  render();
+  document.getElementById(tab).classList.add("active");
+  el.classList.add("active");
 }
 
-/* 戦績 */
-function render(){
+/* 追加 */
+function addBattle() {
+  const result = document.getElementById("resultInput").value.trim();
+  const special = document.getElementById("specialInput").value.trim();
 
-  document.getElementById("p1").innerHTML =
-    data.slice().reverse().map(d=>`
-      <div class="battleCard">
-        <b>${d.stage}</b><br>
-        ${d.result}<br>
-        ${d.special}<br>
-        金:${d.gold} / アシ:${d.goldA} / 赤:${d.red}
-      </div>
-    `).join("");
+  if (!result) return;
 
-  analyze();
+  battles.push({ result, special, time: new Date().toLocaleString() });
+
+  save();
+  render();
+  renderAnalysis();
+
+  document.getElementById("resultInput").value = "";
+  document.getElementById("specialInput").value = "";
+}
+
+/* 成功判定 */
+function isSuccess(result) {
+  return result.includes("成功") || result.includes("オカシラ失敗");
+}
+
+/* 削除 */
+function deleteBattle(index) {
+  if (!confirm("削除する？")) return;
+
+  battles.splice(index, 1);
+  save();
+  render();
+  renderAnalysis();
+}
+
+/* 表示 */
+function render() {
+  const list = document.getElementById("battleList");
+  list.innerHTML = "";
+
+  battles.forEach((b, i) => {
+    const ok = isSuccess(b.result);
+
+    const li = document.createElement("li");
+
+    li.innerHTML = `
+      ${b.result}
+      <span class="badge ${ok ? "success" : "fail"}">
+        ${ok ? "成功" : "失敗"}
+      </span>
+      <br>
+      ${b.special || "なし"}
+      <br>
+      <small>${b.time}</small>
+      <button onclick="deleteBattle(${i})">削除</button>
+    `;
+
+    list.appendChild(li);
+  });
 }
 
 /* 分析 */
-function analyze(){
+function renderAnalysis() {
+  const stats = document.getElementById("stats");
 
-  if(data.length===0) return;
+  const total = battles.length;
+  const success = battles.filter(b => isSuccess(b.result)).length;
 
-  const avg=k=>
-    data.reduce((a,b)=>a+(b[k]||0),0)/data.length;
+  let html = `
+    <h3>全体</h3>
+    <p>総数：${total}</p>
+    <p>成功：${success}</p>
+    <p>失敗：${total - success}</p>
+  `;
 
-  const win = data.filter(d=>d.result.includes("成功")).length;
-
-  avgGold.innerText = Math.round(avg("gold"));
-  avgAssist.innerText = Math.round(avg("goldA"));
-  avgRed.innerText = Math.round(avg("red"));
-  winRate.innerText = Math.round((win/data.length)*100)+"%";
+  stats.innerHTML = html;
 }
 
+/* 初期 */
 render();
+renderAnalysis();
